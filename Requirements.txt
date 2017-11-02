@@ -1,0 +1,34 @@
+Purpose of this document is to try and better understand the requirements of this project.
+
+1. Adding items.
+  - User input data
+  - Using an input file is not explicitly stated, however that is the expectation.
+  - Program needs to be able to write the items to a file, so it would also be convenient if the program can read the same output format as input.
+Q - Should we also be reading an input file on program start up?
+    
+2. Delete data.
+  - By user input delete data by primary key.
+Q - (Optional) Delete all by secondary key? Multiple Deletions at once can be convenient.
+  
+3. Search data.
+  - By primary key.
+  - By secondary key. (Possibly multiple items)
+  
+4. Display data.
+  - Unsorted.
+  - Sorted by primary key.
+  - Sorted by secondary key.
+  - Formatted (indented list).
+Q - Extra option not revealed to user. (Hidden option described in part2?)
+  
+5. Write data to file.
+  - On user request with specified output file name.
+  - On exit with pre determined file name.
+Q - Append or replace existing file?
+  
+6. Data Statistics.
+Q - ???? (Part 2 should clarify this)
+  
+7. Quit
+  - Exit program without memory leaks.
+  - No unexpected crashes during execution.
