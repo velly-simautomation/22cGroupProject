@@ -1,0 +1,57 @@
+DATA STRUCTURES (Suggested)
+
+  hashed list array (contiguous memory)
+    hash of primary key (must be string)
+    hash with 2 functions ("good" and "bad")
+    collisions will be resolved in "linear probe" like method (see below)
+
+  2 binary search trees
+    1 bst for primary key
+    1 bst for secondary key
+
+  a "good" hash function reduces number of possible collisions
+
+  collision resolving method alternates between positive and negative index offsets from home address
+  algorithm :
+    if home is full
+      loop (offset = 1)
+        try home + offset
+          exit loop on success
+        if offset < 0
+          offset * -1 + 1
+        else
+          (offset + 1) * -1
+
+  need to draw a data structure diagram of the hashed array and two bst
+
+  Suggested Assignments splits work to 5 Units
+    Unit 1 - Team coordinator (Structure Design and managers)
+    Unit 2 - BST Algorithms
+    Unit 3 - Hash list algorithms
+    Unit 4 - Screen Output
+    Unit 5 - File I/O
+
+  
+DOCUMENTATION
+  
+  Team Leader submits project (22c_Team_No_5.zip)
+  
+  Project will contain program sub folder (progam_docs)
+    sources and headers fully documented and debug code free
+    input file
+    demonstration test plan
+    output
+    executable version of program
+  
+  and a presentation sub folder
+    ppt (preferred), word doc or pdf with presentation
+    details in p2 pdf
+    
+PRESENTATION
+  Explain Scenario and Design approach.
+  Demonstrate all program options.
+  Demonstrate collison resolve.
+  Q&A
+
+
+  
