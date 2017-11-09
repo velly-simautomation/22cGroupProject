@@ -10,7 +10,8 @@
 	Yuchen Jiang
 	Aijun Qin
 
-	Authors: Velly
+	Authors: 
+	Velly
 
 */
 
@@ -29,18 +30,28 @@ int printMenu();
 /* opens a text file and dumps lines into a linked list to be processed */
 int readFile(const string &fileName, Queue<string> &output);
 
+/* returns remainder between the sum of all characters in a string over an unsigned int */
+unsigned int operator%(const string &lhs, const unsigned int &rhs);
 
 using namespace std;
 
 int main(int argc, char *argv[]) {
 	Queue<string> readLines;
+	
+	//TO DO: do something with return value
 	readFile("defaultInput.txt", readLines);
+
 	HashTable<string> table = HashTable<string>(10);
-	string hi = "hello";
-	table.insert(hi);
+
+	/* testing */
+	table.insert(string("hello"));
+
 	table.print();
 
 	cout << table.at(0) << endl;
+	cout << (string("alphabet") % 11) << endl;
+	/* end testing */
+
 	// process lines
 
 	mainMenu();
@@ -96,4 +107,14 @@ int readFile(const string &fileName, Queue<string> &output) {
 	}
 
 	return 0;
+}
+
+unsigned int operator%(const string &lhs, const unsigned int &rhs) {
+	unsigned int lhsval = 0;
+
+	for (unsigned int i = 0; i < lhs.size(); ++i) {
+		lhsval += lhs.at(i);
+	}
+
+	return lhsval % rhs;
 }
