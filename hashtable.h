@@ -24,6 +24,7 @@ private:
 	T **table = nullptr; // table is a pointer to T pointers
 	int32_t _size = 0, _count = 0;
 	bool _simple = false;
+	int32_t (*_hashFunction)(const T* &item) = NULL;
 
 	int32_t _hash(const T &item); // must overload operator%(T,uint32_t)
 	int32_t _simpleHash(const T &item); // must overload operator%(T,uint32_t)
@@ -32,6 +33,7 @@ private:
 public:
 	// do not forget to try/catch for bad alloc
 	HashTable(int32_t size, bool simple = false);
+	HashTable(int32_t size, int32_t hashFunction(const T* &item));
 
 	~HashTable();
 	
@@ -69,6 +71,14 @@ HashTable<T>::HashTable(int32_t size, bool simple) {
 		table = new T*[size] { 0 };
 	_size = size;
 	_simple = simple;
+}
+
+_template
+HashTable<T>::HashTable(int32_t size, int32_t hashFunction(const T* &item)) {
+	if (size >= 0)
+		table = new T*[size] { 0 };
+	_size = size;
+	_hashFunction = hashFunction;
 }
 
 _template
