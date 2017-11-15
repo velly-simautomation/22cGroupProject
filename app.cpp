@@ -17,39 +17,37 @@
 
 #include <iostream>
 #include <fstream>
-#include <string>
-#include "Queue.h" // might want to replace this with one of ours, no author on this one
+
 #include "hashtable.h"
-
-/* main menu manager controlling overall flow of user interactions */
-int mainMenu();
-
-/* menu text to show to user when requested */
-int printMenu();
-
-/* opens a text file and dumps lines into a linked list to be processed */
-int readFile(const string &fileName, Queue<string> &output);
-
-/* returns remainder between the sum of all characters in a string over an unsigned int */
-unsigned int operator%(const string &lhs, const unsigned int &rhs);
+#include "app.h"
 
 using namespace std;
 
 int main(int argc, char *argv[]) {
 	Queue<string> readLines;
-	
-	//TO DO: do something with return value
-	readFile("defaultInput.txt", readLines);
+	int nlines = readFile("defaultInput.txt", readLines);
 
-	HashTable<string> table = HashTable<string>(10);
+	HashTable<string> table = HashTable<string>(nlines, true);
 
 	/* testing */
-	table.insert(string("hello"));
+	HashTable<string> testTable = HashTable<string>(10, true);
+	string h = "group";
 
-	table.print();
+	testTable.insert(h);
+	testTable.insert(h);
+	testTable.insert(h);
+	testTable.insert(h);
+	testTable.insert(h);
+	testTable.insert(h);
+	testTable.insert(h);
+	testTable.insert(h);
+	testTable.insert(h);
+	testTable.insert(h);
+	testTable.insert(h);
 
-	cout << table.at(0) << endl;
-	cout << (string("alphabet") % 11) << endl;
+	testTable.print();
+
+	cout << *testTable.at(testTable.hash(h)) << endl;
 	/* end testing */
 
 	// process lines
@@ -100,13 +98,13 @@ int readFile(const string &fileName, Queue<string> &output) {
 
 	iFile.open(fileName, ios_base::in);
 
-	if (!iFile) return 1;
+	if (!iFile) return -1;
 
 	while (getline(iFile, tmp)) {
 		output.enqueue(tmp);
 	}
 
-	return 0;
+	return output.getCount();
 }
 
 unsigned int operator%(const string &lhs, const unsigned int &rhs) {
