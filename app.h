@@ -21,6 +21,7 @@
 #define APP_H
 
 #include <string>
+
 #include "Queue.h"  // might want to replace this with one of ours, no author on this one
 
 /* main menu manager controlling overall flow of user interactions */
@@ -32,6 +33,8 @@ int printMenu();
 /* opens a text file and dumps lines into a linked list to be processed
  * returns number of lines in output, or -1 on error */
 int readFile(const string &fileName, Queue<string> &output);
+
+int stringModHash(const string &value, const int &hashTableSize);
 
 /* returns remainder between the sum of all characters in a string over an unsigned int */
 unsigned int operator%(const string &lhs, const unsigned int &rhs);

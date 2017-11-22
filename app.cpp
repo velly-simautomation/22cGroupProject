@@ -27,27 +27,22 @@ int main(int argc, char *argv[]) {
 	Queue<string> readLines;
 	int nlines = readFile("defaultInput.txt", readLines);
 
-	HashTable<string> table = HashTable<string>(nlines, true);
+	HashTable<string> table = HashTable<string>(nlines, stringModHash);
 
 	/* testing */
-	HashTable<string> testTable = HashTable<string>(10, true);
+	HashTable<string> testTable = HashTable<string>(10, stringModHash);
 	string h = "group";
-
 	testTable.insert(h);
-	testTable.insert(h);
-	testTable.insert(h);
-	testTable.insert(h);
-	testTable.insert(h);
-	testTable.insert(h);
-	testTable.insert(h);
-	testTable.insert(h);
-	testTable.insert(h);
-	testTable.insert(h);
-	testTable.insert(h);
-
 	testTable.print();
-
 	cout << *testTable.at(testTable.hash(h)) << endl;
+	cout << "Find h in hashtable : " << testTable.find(h) << endl;
+
+	string& z = testTable.remove(stringModHash(h, 10));
+	cout << z << endl;
+	cout << "Find h in hashtable : " << testTable.find(h) << endl;
+	testTable.print();
+	h = "place";
+	cout << z << endl;
 	/* end testing */
 
 	// process lines
@@ -115,4 +110,8 @@ unsigned int operator%(const string &lhs, const unsigned int &rhs) {
 	}
 
 	return lhsval % rhs;
+}
+
+int stringModHash(const string &input, const int &size) {
+	return input % size;
 }
