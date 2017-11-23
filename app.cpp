@@ -27,33 +27,19 @@ int main(int argc, char *argv[]) {
 	Queue<string> readLines;
 	int nlines = readFile("defaultInput.txt", readLines);
 
-	HashTable<string> table = HashTable<string>(nlines, stringModHash);
-
-	/* testing */
+//	HashTable<string> table = HashTable<string>(nlines, stringModHash);
 	HashTable<string> testTable = HashTable<string>(10, stringModHash);
-	string h = "group";
-	testTable.insert(h);
-	testTable.print();
-	cout << *testTable.at(testTable.hash(h)) << endl;
-	cout << "Find h in hashtable : " << testTable.find(h) << endl;
-
-	string& z = testTable.remove(stringModHash(h, 10));
-	cout << z << endl;
-	cout << "Find h in hashtable : " << testTable.find(h) << endl;
-	testTable.print();
-	h = "place";
-	cout << z << endl;
-	/* end testing */
 
 	// process lines
 
-	mainMenu();
+	testMenu(testTable);
+//	mainMenu(table);
 
 	// save data to file
 
 }
 
-int mainMenu() {
+int mainMenu(HashTable<string> &table) {
 	string input = ""; // using string to avoid flushing stdin
 	
 	cout << "22C Group Project Main Menu" << endl;
@@ -68,10 +54,70 @@ int mainMenu() {
 
 		input[0] = toupper(input[0]);
 
-
 		// TO DO : make all options available, do not forget to update printMenu()
 		if (input[0] == 'A');
-		else if (input[0] == 'B'); // etc
+		else if (input[0] == 'B');
+		else if (input[0] == 'M') printMenu();
+	}
+	return 0;
+}
+
+int testMenu(HashTable<string> &table) {
+	string input = "";
+	string h = "group";
+	string k = "extra";
+	string *z = nullptr;
+
+	cout << "22C Group Project Main Menu" << endl;
+	cout << "\tData base items : " << endl;
+	printMenu();
+
+	while (input[0] != 'Q') {
+		cout << "Option : ";
+		getline(cin, input);
+
+		if (input.size() != 1) continue;
+
+		input[0] = toupper(input[0]);
+
+		if (input[0] == 'A') {
+			table.insert(h);
+			table.print();
+			cout << table.count() << " out of " << table.size() << endl;
+		}
+		else if (input[0] == 'B') {
+			z = table.remove(table.find(h));
+			table.print();
+			cout << table.count() << " out of " << table.size() << endl;
+		}
+		else if (input[0] == 'C') {
+			int x = table.find(h);
+			if (x > -1)
+				cout << "Found at " << x << "." << endl;
+		}
+		else if (input[0] == 'D') {
+			table.remove(0);
+		}
+		else if (input[0] == 'E') {
+			h = "team";
+		}
+		else if (input[0] == 'F') {
+			h = "group";
+		}
+		else if (input[0] == 'G') {
+			if (z)
+				cout << *z << endl;
+		}
+		else if (input[0] == 'H') {
+			table.insert(k);
+			table.print();
+			cout << table.count() << " out of " << table.size() << endl;
+		}
+		else if (input[0] == 'I') {
+			table.remove(table.find(k));
+			table.print();
+			cout << table.count() << " out of " << table.size() << endl;
+		}
 		else if (input[0] == 'M') printMenu();
 	}
 	return 0;
