@@ -57,7 +57,7 @@ public:
 	int print();
 
 	// insert item into hash table
-	// on sucess returns insert index
+	// on sucess returns collisions
 	// otherwise -1
 	int32_t insert(T &item);
 
@@ -125,7 +125,7 @@ int32_t HashTable<T>::insert(T &item) {
 	if ((table[x] == nullptr) || (table[x] == _sentinel)) { // x is never out of range from wrap
 		table[x] = &item;
 		++_count;
-		return x;
+		return (offs<0)? offs*-1: offs;
 	}
 
 	else return -1; // could not insert
