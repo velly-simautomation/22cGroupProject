@@ -55,11 +55,11 @@ public:
 
 
 	// Getters for private members
-	int32_t size() { return _size; }
-	int32_t count() { return _count; }
+	int32_t size() const { return _size; }
+	int32_t count() const { return _count; }
 	
 	// returns pointer to object at index position
-	T* at(int32_t index);
+	T* at(int32_t index) const;
 
 	// prints to stdout the contents of the hash table
 	// first address is hash table address, second is address of T
@@ -87,8 +87,8 @@ public:
 // PUBLIC FUNCTIONS
 
 _template
-T* HashTable<T>::at(int32_t index) {
-	if ((index >= _size) || (index < 0)) return NULL;
+T* HashTable<T>::at(int32_t index) const {
+	if ((index >= _size) || (index < 0) || table[index] == _sentinel) return nullptr;
 	return table[index];
 }
 

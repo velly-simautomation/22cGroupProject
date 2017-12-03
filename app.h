@@ -12,7 +12,7 @@
 
 	Authors:
 	Velly
-
+	Aijun Qin
 */
 
 #pragma once
@@ -26,9 +26,10 @@
 #include "hashtable.h"
 #include "Robot.h"
 #include "BinarySearchTree.h"
+#include "primeHelper.h"
 
 /* main menu manager controlling overall flow of user interactions */
-int mainMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable, BinarySearchTree<Robot*> &primaryTable, BinarySearchTree<Robot*> &secondaryTable);
+int mainMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable, BinarySearchTree<Robot*> &primaryTable, BinarySearchTree<Robot*> &secondaryTable, int coll[4]);
 
 /* menu text to show to user when requested */
 int printMenu();
@@ -37,8 +38,22 @@ int printMenu();
  * returns number of lines in output, or -1 on error */
 int readFile(const string &fileName, Queue<string> &output);
 
-int processLines(Queue<string> lines, HashTable<Robot> &badTable, HashTable<Robot> &goodTable, BinarySearchTree<Robot*> &primaryTable, BinarySearchTree<Robot*> &secondaryTable);
+/* loop to process all strings from Queue of strings created by readFile */
+int processLines(Queue<string> &lines, HashTable<Robot> &badTable, HashTable<Robot> &goodTable, BinarySearchTree<Robot*> &primaryTable, BinarySearchTree<Robot*> &secondaryTable, int col[4]);
 
-int writeFile(const string &outName, HashTable<Robot> data);
+/* writes hashtable to file */
+int writeFile(const string &outName, const HashTable<Robot> &data);
+
+/* Written by Aijun Qin, makes robot from string assuming proper format */
+void lineParser(string &line, Robot *&robot);
+
+/* Function to print a robot pointer, passed to BST and printHashTable */
+void printRobot(Robot * &robot);
+
+/* Prints hash table inside class and statistics  for the table. */
+void printHashTable(const HashTable<Robot> &table, void print(Robot * & robot), const int &totCol, const int &maxCol);
+
+/* returns string equivalent of robot which can be parsed by lineParser */
+string robotString(Robot &robot);
 
 #endif

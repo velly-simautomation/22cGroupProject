@@ -1,6 +1,6 @@
 // Implementation file for Robot class
 // Created by Aijun Qin
-// Modified by:
+// Modified by: Velly
 
 using namespace std;
 #include "Robot.h"
@@ -60,7 +60,8 @@ ostream &operator<<(ostream &strm, const Robot &obj)
 int robot_hash_good(const Robot &item, const int &size)
 {
     int sum = 0;
-	const char *key = item.getSerialNumber().c_str();
+	string snr = item.getSerialNumber(); // velly : key was being assigned to a tmp variable returned by this which was empty, perhaps undefined behavior works on some machines but not all
+	const char *key = snr.c_str();
 
     while (*key)
     {
@@ -73,7 +74,8 @@ int robot_hash_good(const Robot &item, const int &size)
 int robot_hash_bad(const Robot &item, const int &size)
 {
     int sum = 0;
-	const char *key = item.getSerialNumber().c_str();
+	string snr = item.getSerialNumber(); // velly : same as good hash
+	const char *key = snr.c_str();
 
     while (*key)
     {
