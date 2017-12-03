@@ -18,7 +18,6 @@
 #include <iostream>
 #include <fstream>
 
-#include "hashtable.h"
 #include "app.h"
 
 using namespace std;
@@ -27,19 +26,20 @@ int main(int argc, char *argv[]) {
 	Queue<string> readLines;
 	int nlines = readFile("defaultInput.txt", readLines);
 
-//	HashTable<string> table = HashTable<string>(nlines, stringModHash);
-	HashTable<string> testTable = HashTable<string>(10, stringModHash);
+	HashTable<Robot> badTable = HashTable<Robot>(nlines, robot_hash_bad); // change nlines with next prime number
+	HashTable<Robot> goodTable = HashTable<Robot>(nlines, robot_hash_good); // same
+	BinarySearchTree<Robot*> primaryBST = BinarySearchTree<Robot*>(comparePrimaryKey),
+		secondaryBST = BinarySearchTree<Robot*>(compareSecondaryKey);
 
 	// process lines
 
-	testMenu(testTable);
-//	mainMenu(table);
+	mainMenu(badTable, goodTable, primaryBST, secondaryBST);
 
-	// save data to file
+	// save data to file, use good table
 
 }
 
-int mainMenu(HashTable<string> &table) {
+int mainMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable, BinarySearchTree<Robot*> &primaryTable, BinarySearchTree<Robot*> &secondaryTable){
 	string input = ""; // using string to avoid flushing stdin
 	
 	cout << "22C Group Project Main Menu" << endl;
@@ -57,67 +57,6 @@ int mainMenu(HashTable<string> &table) {
 		// TO DO : make all options available, do not forget to update printMenu()
 		if (input[0] == 'A');
 		else if (input[0] == 'B');
-		else if (input[0] == 'M') printMenu();
-	}
-	return 0;
-}
-
-int testMenu(HashTable<string> &table) {
-	string input = "";
-	string h = "group";
-	string k = "extra";
-	string *z = nullptr;
-
-	cout << "22C Group Project Main Menu" << endl;
-	cout << "\tData base items : " << endl;
-	printMenu();
-
-	while (input[0] != 'Q') {
-		cout << "Option : ";
-		getline(cin, input);
-
-		if (input.size() != 1) continue;
-
-		input[0] = toupper(input[0]);
-
-		if (input[0] == 'A') {
-			table.insert(h);
-			table.print();
-			cout << table.count() << " out of " << table.size() << endl;
-		}
-		else if (input[0] == 'B') {
-			z = table.remove(table.find(h));
-			table.print();
-			cout << table.count() << " out of " << table.size() << endl;
-		}
-		else if (input[0] == 'C') {
-			int x = table.find(h);
-			if (x > -1)
-				cout << "Found at " << x << "." << endl;
-		}
-		else if (input[0] == 'D') {
-			table.remove(0);
-		}
-		else if (input[0] == 'E') {
-			h = "team";
-		}
-		else if (input[0] == 'F') {
-			h = "group";
-		}
-		else if (input[0] == 'G') {
-			if (z)
-				cout << *z << endl;
-		}
-		else if (input[0] == 'H') {
-			table.insert(k);
-			table.print();
-			cout << table.count() << " out of " << table.size() << endl;
-		}
-		else if (input[0] == 'I') {
-			table.remove(table.find(k));
-			table.print();
-			cout << table.count() << " out of " << table.size() << endl;
-		}
 		else if (input[0] == 'M') printMenu();
 	}
 	return 0;
@@ -146,18 +85,4 @@ int readFile(const string &fileName, Queue<string> &output) {
 	}
 
 	return output.getCount();
-}
-
-unsigned int operator%(const string &lhs, const unsigned int &rhs) {
-	unsigned int lhsval = 0;
-
-	for (unsigned int i = 0; i < lhs.size(); ++i) {
-		lhsval += lhs.at(i);
-	}
-
-	return lhsval % rhs;
-}
-
-int stringModHash(const string &input, const int &size) {
-	return input % size;
 }

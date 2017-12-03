@@ -1,8 +1,8 @@
 /**~*~*
    Queue template
 *~**/
-#ifndef DYNAMICQUEUE_H
-#define DYNAMICQUEUE_H
+#ifndef _DYNAMICQUEUE_H
+#define _DYNAMICQUEUE_H
 #include <iostream>
 using namespace std;
 
@@ -28,7 +28,7 @@ public:
    // Destructor
    ~Queue();
 
-   // Stack operations
+   // Queue operations
    bool enqueue(T);
    bool dequeue(T &);
    bool isEmpty();

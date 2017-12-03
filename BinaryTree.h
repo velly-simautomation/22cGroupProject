@@ -1,12 +1,12 @@
 // Binary tree abstract base class
 // Created by Frank M. Carrano and Tim Henry.
-// Modified by:
+// Modified by: CheJui
  
 #ifndef _BINARY_TREE
 #define _BINARY_TREE
 
 #include "BinaryNode.h"
-#include "QueueADT.h"
+#include "Queue.h"
 
 template<class ItemType>
 class BinaryTree

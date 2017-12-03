@@ -20,8 +20,8 @@
 
 
 #pragma once
-#ifndef HASHTABLE_H
-#define HASHTABLE_H
+#ifndef _HASHTABLE_H
+#define _HASHTABLE_H
 
 #define _template template<class T>
 
@@ -40,9 +40,19 @@ public:
 
 	// hash table constructor taking in size of table and hash function to use with items stored
 	// do not forget to try/catch for a bad alloc exception
-	HashTable(int32_t size, int32_t hashFunction(const T &item, const int32_t &size));
+	HashTable(int32_t size, int32_t hashFunction(const T &item, const int32_t &size)) {
+		if (size == -1) size = -2; // -1 exception causes allocation of 0 bytes which is valid, this is a fix
+		table = new T*[size + 1]{ 0 }; // one extra sentinel for deleted values
+		_sentinel = (void*)(&table[size]);
+		_size = size;
+		_hashFunction = hashFunction;
+	}
 
-	~HashTable();
+	~HashTable() {
+		if (table != nullptr)
+			delete[] table;
+	}
+
 
 	// Getters for private members
 	int32_t size() { return _size; }
@@ -75,21 +85,6 @@ public:
 
 
 // PUBLIC FUNCTIONS
-
-_template
-HashTable<T>::HashTable(int32_t size, int32_t hashFunction(const T &item, const int32_t &size)) {
-	if (size == -1) size = -2; // -1 exception causes allocation of 0 bytes which is valid, this is a fix
-	table = new T*[size + 1]{ 0 }; // one extra sentinel for deleted values
-	_sentinel = (void*)(&table[size]);
-	_size = size;
-	_hashFunction = hashFunction;
-}
-
-_template
-HashTable<T>::~HashTable() {
-	if (table != nullptr)
-		delete[] table;
-}
 
 _template
 T* HashTable<T>::at(int32_t index) {
