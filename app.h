@@ -2,6 +2,8 @@
 	22C Group Project main header file.
 	Fall 2017
 
+	Robot Database
+
 	Contains function declarations for assisting functions to main.
 
 	Team 5 Members:
@@ -26,10 +28,9 @@
 #include "hashtable.h"
 #include "Robot.h"
 #include "BinarySearchTree.h"
-#include "primeHelper.h"
 
 /* main menu manager controlling overall flow of user interactions */
-int mainMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable, BinarySearchTree<Robot*> &primaryTable, BinarySearchTree<Robot*> &secondaryTable, int coll[4]);
+int mainMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable, BinarySearchTree<Robot*> &primaryTree, BinarySearchTree<Robot*> &secondaryTree, int coll[4]);
 
 /* menu text to show to user when requested */
 int printMenu();
@@ -39,7 +40,7 @@ int printMenu();
 int readFile(const string &fileName, Queue<string> &output);
 
 /* loop to process all strings from Queue of strings created by readFile */
-int processLines(Queue<string> &lines, HashTable<Robot> &badTable, HashTable<Robot> &goodTable, BinarySearchTree<Robot*> &primaryTable, BinarySearchTree<Robot*> &secondaryTable, int col[4]);
+int processLines(Queue<string> &lines, HashTable<Robot> &badTable, HashTable<Robot> &goodTable, BinarySearchTree<Robot*> &primaryTree, BinarySearchTree<Robot*> &secondaryTree, int col[4]);
 
 /* writes hashtable to file */
 int writeFile(const string &outName, const HashTable<Robot> &data);
@@ -55,5 +56,8 @@ void printHashTable(const HashTable<Robot> &table, void print(Robot * & robot), 
 
 /* returns string equivalent of robot which can be parsed by lineParser */
 string robotString(Robot &robot);
+
+/* crude menu for adding data in database */
+void addMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable, BinarySearchTree<Robot*> &primaryTree, BinarySearchTree<Robot*> &secondaryTree, int col[4]);
 
 #endif

@@ -2,6 +2,8 @@
 	22C Group Project main source file.
 	Fall 2017
 
+	Robot Database
+
 	Contains entry point and managers which utilize the tools needed for this assignment.
 
 	Team 5 Members:
@@ -12,6 +14,7 @@
 
 	Authors: 
 	Velly
+	Aijun Qin
 
 */
 
@@ -19,6 +22,8 @@
 #include <fstream>
 
 #include "app.h"
+#include "Utils.h"
+#include "primeHelper.h"
 
 using namespace std;
 
@@ -40,11 +45,11 @@ int main(int argc, char *argv[]) {
 
 }
 
-int mainMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable, BinarySearchTree<Robot*> &primaryTable, BinarySearchTree<Robot*> &secondaryTable, int coll[4]){
+int mainMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable, BinarySearchTree<Robot*> &primaryTree, BinarySearchTree<Robot*> &secondaryTree, int coll[4]){
 	string input = ""; // using string to avoid flushing stdin
 	
-	cout << "22C Group Project Main Menu" << endl;
-	cout << "\tData base items : " << endl; // add database items count to line
+	cout << "Robod Database Main Menu" << endl;
+	cout << "\tData base items : " << goodTable.count() << endl;
 	printMenu();
 
 	while (input[0] != 'Q') {
@@ -55,11 +60,16 @@ int mainMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable, BinarySear
 
 		input[0] = toupper(input[0]);
 
-		// TO DO : make all options available, do not forget to update printMenu()
-		if (input[0] == 'A') {
-			primaryTable.inOrder(printRobot);
+		if (input[0] == 'A') { // add new data
+			addMenu(badTable, goodTable, primaryTree, secondaryTree, coll);
+		}
+		else if (input[0] == 'D') { // delete data
+
+		}
+		else if (input[0] == 'L') { // list data
+			primaryTree.inOrder(printRobot);
 			cout << endl;
-			secondaryTable.inOrder(printRobot);
+			secondaryTree.inOrder(printRobot);
 			cout << endl;
 			printHashTable(goodTable, printRobot, coll[0], coll[1]);
 			cout << endl;
@@ -68,10 +78,27 @@ int mainMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable, BinarySear
 			cout << robotString(*goodTable.at(0));
 			cout << endl;
 		}
-		else if (input[0] == 'B') {
+		else if (input[0] == 'M') { // print menu
+			printMenu();
+		}
+		else if (input[0] == 'S') { // search data
+
+		}
+
+		else if (input[0] == 'W') { // write data
 			writeFile("defaultInput.txt", goodTable);
 		}
-		else if (input[0] == 'M') printMenu();
+		else if (input[0] == 'X') { // display hash table statistics
+			double factor = goodTable.count() * 100;
+			factor /= goodTable.size();
+			cout << endl;
+			cout << "\tDatabase Items : " << goodTable.count() << endl;
+			cout << "\tHashtables Size : " << goodTable.size() << endl;
+			cout << "\tLoad Factor : " << factor << endl;
+			cout << "\tGood Hash Table | Total Collisions : " << coll[0] << " Max Collisions for insert : " << coll[1] << endl;
+			cout << "\tBad Hash Table | Total Collisions : " << coll[2] << " Max Collisions for insert : " << coll[3] << endl;
+		}
+
 	}
 	return 0;
 }
@@ -79,9 +106,13 @@ int mainMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable, BinarySear
 
 // TO DO : Update print menu with actual available options.
 int printMenu() {
-	cout << "\tA for job 1." << endl;
-	cout << "\tB for job 2." << endl;
+	cout << "\tA for add new data menu." << endl;
+	cout << "\tD for delete data menu." << endl;
+	cout << "\tL for list data menu." << endl;
 	cout << "\tM to show this menu." << endl;
+	cout << "\tS for search data menu." << endl;
+	cout << "\tW to write to defaultInput.txt" << endl;
+	cout << "\tX to display hashtable statistics." << endl;
 	cout << "\tQ to quit program." << endl;
 	return 0;
 }
@@ -192,4 +223,82 @@ int writeFile(const string &outName, const  HashTable<Robot> &data) {
 	}
 
 	return data.count();
+}
+
+void addMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable,
+	BinarySearchTree<Robot*> &primaryTree, BinarySearchTree<Robot*> &secondaryTree, int col[4]) {
+	string input = "",
+		robot="";
+	bool inserted = false, endPrompt = false;
+
+	cout << "Robot insertion Menu" << endl;
+
+	while ((input[0] != 'Q') || (input.size() != 1)) {
+		cout << "Robot Serial Number (9 characters) : ";
+		getline(cin, input);
+
+		input = vutil::reduce(input,"");
+		input = vutil::stringToUpper(input);
+
+		if (input.size() != 9) continue;
+
+		robot += input + ';'; // snr success
+
+		while ((input[0] != 'Q') || (input.size() != 1)) {
+			cout << robot << "\nModel? (1-20 characters, not 'Q') : ";
+			getline(cin, input);
+			input = vutil::reduce(input, " ");
+			input = vutil::stringToUpper(input);
+			if (input.size() < 1 || input.size() > 20) continue;
+			robot += input + ';'; // model success
+			while ((input[0] != 'Q') || (input.size() != 1)) {
+				cout << robot << "\nAlias? (0-20 characters, not 'Q') : ";
+				getline(cin, input);
+				input = vutil::reduce(input, " ");
+				if (input.size() > 0) input[0] = toupper(input[0]);
+				if (input.size() > 20) continue;
+				robot += input + ';'; // alias success
+				while ((input[0] != 'Q') || (input.size() != 1)) {
+					cout << robot << "\nComment? (0-100 characters, not 'Q') : ";
+					getline(cin, input);
+					input = vutil::reduce(input, " ");
+					if (input.size() > 0) input[0] = toupper(input[0]);
+					if (input.size() > 100) continue;
+					robot += input + ';'; // comment success
+					while ((input[0] != 'Q') || (input.size() != 1)) {
+						cout << robot << "\nDate? (0-12 characters, not 'Q') : ";
+						getline(cin, input);
+						input = vutil::reduce(input, " ");
+						if (input.size() > 12) continue;
+						robot += input + ';'; // date success
+						while (input[0] != 'Y' && input[0] != 'N') {
+							cout << robot << endl << "Insert into database? (Y or N) : ";
+							getline(cin, input);
+							input = vutil::trim(input);
+							if (input.size() != 1) continue;
+							input[0] = toupper(input[0]);
+							if (input[0] == 'Y') {
+								Queue<string> q;
+								q.enqueue(robot);
+								processLines(q, badTable, goodTable, primaryTree, secondaryTree, col);
+								inserted = true;
+							}
+							endPrompt = true;
+						}
+						if (endPrompt) break;
+					}
+					if (endPrompt) break;
+				}
+				if (endPrompt) break;
+			}
+			if (endPrompt) break;
+
+		}
+		if (inserted) {
+			cout << "Inserted " << robot << " !" << endl;
+			inserted = false;
+		}
+		endPrompt = false;
+		robot = "";
+	}
 }
