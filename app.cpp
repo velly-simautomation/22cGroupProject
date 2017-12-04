@@ -339,7 +339,7 @@ void deleteMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable, BinaryS
 	string input = "";
 	Robot * rPtr = nullptr;
 
-	cout << "Robot Search Menu" << endl;
+	cout << "Robot Deletion Menu" << endl;
 
 	while ((input[0] != 'Q') || (input.size() != 1)) {
 		cout << "Search - Robot SNR (9 characters) : ";
@@ -392,6 +392,7 @@ void listMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable, BinarySea
 			cout << "G for hashtable with good hash function." << endl;
 			cout << "H for this menu." << endl;
 			cout << "P for sorted by primary key." << endl;
+			cout << "Q to return to main menu." << endl;
 			cout << "S for sorted by secondary key." << endl;
 		}
 		if (input[0] == 'P') {
