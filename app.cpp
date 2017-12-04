@@ -32,8 +32,8 @@ int main(int argc, char *argv[]) {
 	int nlines = readFile("defaultInput.txt", readLines);
 	int coll[4] = { 0, 0, 0, 0 }; //good total collisons, good max collisions, bad tot, bad max
 
-	HashTable<Robot> badTable = HashTable<Robot>(getNextPrime(nlines), robot_hash_bad); // change nlines with next prime number
-	HashTable<Robot> goodTable = HashTable<Robot>(getNextPrime(nlines), robot_hash_good); // same
+	HashTable<Robot> badTable = HashTable<Robot>(getNextPrime(nlines*2), robot_hash_bad); // change nlines with next prime number
+	HashTable<Robot> goodTable = HashTable<Robot>(getNextPrime(nlines*2), robot_hash_good); // same
 	BinarySearchTree<Robot*> primaryBST = BinarySearchTree<Robot*>(comparePrimaryKey),
 		secondaryBST = BinarySearchTree<Robot*>(compareSecondaryKey);
 
