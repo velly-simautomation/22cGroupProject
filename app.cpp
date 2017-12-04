@@ -238,7 +238,6 @@ void addMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable,
 			cout << robot << "\nModel? (1-20 characters, not 'Q') : ";
 			getline(cin, input);
 			input = vutil::reduce(input, " ");
-			input = vutil::stringToUpper(input);
 			if (input.size() < 1 || input.size() > 20) continue;
 			robot += input + ';'; // model success
 			while ((input[0] != 'Q') || (input.size() != 1)) {
