@@ -107,5 +107,5 @@ int compareSecondaryKey(Robot * &p1, Robot * &p2)
     else if (model1 < model2)
         return -1;
     else
-        return 0;
+        return comparePrimaryKey(p1, p2);
 }
