@@ -341,7 +341,7 @@ void deleteMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable, BinaryS
 	cout << "Robot Deletion Menu" << endl;
 
 	while ((input[0] != 'Q') || (input.size() != 1)) {
-		cout << "Search - Robot SNR (9 characters) : ";
+		cout << "Delete - Robot SNR (9 characters) : ";
 		getline(cin, input);
 
 		input = vutil::reduce(input, "");
@@ -353,12 +353,24 @@ void deleteMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable, BinaryS
 		int pos = goodTable.find(tmp);
 		if (pos != -1) {
 			rPtr = goodTable.at(pos);
-			cout << "Located robot: " << robotString(*rPtr) << endl;
+			cout << "Removing robot: " << robotString(*rPtr) << endl;
 			goodTable.remove(pos);
 			pos = badTable.find(tmp);
 			badTable.remove(pos);
 			prmaryBST.remove(rPtr);
-			secondaryBST.remove(rPtr);
+			
+			Robot* rPtr2;
+			Queue<Robot*> queue = Queue<Robot*>();
+			while (secondaryBST.getEntry(rPtr,rPtr2)) {
+				queue.enqueue(rPtr2);
+				secondaryBST.remove(rPtr2);
+			}
+			while (queue.dequeue(rPtr2)) {
+				if (rPtr2 == rPtr) continue;
+				secondaryBST.insert(rPtr2);
+			}
+
+//			secondaryBST.remove(rPtr); // to do : fix duplicates
 			cout << "Removed." << endl;
 		}
 	}

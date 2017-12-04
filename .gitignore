@@ -5,4 +5,5 @@ Debug/
 *.vcxproj
 *.filters
 *.opendb
-Report5/Team 5 Report 5.docx
+*.docx
+*.zip

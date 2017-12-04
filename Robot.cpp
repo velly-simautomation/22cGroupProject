@@ -102,10 +102,11 @@ int compareSecondaryKey(Robot * &p1, Robot * &p2)
     string model1 = p1->getModel();
     string model2 = p2->getModel();
 
-    if (model1 > model2)
-        return 1;
-    else if (model1 < model2)
-        return -1;
-    else
-        return comparePrimaryKey(p1, p2);
+	if (model1 > model2)
+		return 1;
+	else if (model1 < model2)
+		return -1;
+	else
+		return 0;
+//        return comparePrimaryKey(p1, p2);
 }
