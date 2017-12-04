@@ -61,7 +61,7 @@ string robotString(Robot &robot);
 void addMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable, BinarySearchTree<Robot*> &primaryTree, BinarySearchTree<Robot*> &secondaryTree, int col[4]);
 
 /* search menu for robots */
-void searchMenu(HashTable<Robot> &goodTable);
+void searchMenu(HashTable<Robot> &goodTable, BinarySearchTree<Robot*> & secondaryBST);
 
 /* delete menu */
 void deleteMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable, BinarySearchTree<Robot*> &prmaryBST, BinarySearchTree<Robot*> &secondaryBST);

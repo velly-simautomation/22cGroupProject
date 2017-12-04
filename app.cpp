@@ -73,7 +73,7 @@ int mainMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable, BinarySear
 			printMenu();
 		}
 		else if (input[0] == 'S') { // search data menu
-			searchMenu(goodTable);
+			searchMenu(goodTable, secondaryBST);
 		}
 
 		else if (input[0] == 'W') { // write data
@@ -293,25 +293,44 @@ void addMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable,
 	}
 }
 
-void searchMenu( HashTable<Robot> &goodTable) {
+void searchMenu( HashTable<Robot> &goodTable, BinarySearchTree<Robot*> &secondaryBST) {
 	string input = "";
 
 	cout << "Robot Search Menu" << endl;
 
 	while ((input[0] != 'Q') || (input.size() != 1)) {
-		cout << "Search - Robot SNR (9 characters) : ";
+		cout << "Search - P{SNR} or S{model}: ";
 		getline(cin, input);
 
-		input = vutil::reduce(input, "");
-		input = vutil::stringToUpper(input);
+		input = vutil::reduce(input, " ");
+		input[0] = toupper(input[0]);
 
-		if (input.size() != 9) continue;
-
-		Robot tmp = Robot(input,"","","","");
-		int pos = goodTable.find(tmp);
-		if (pos != -1) {
-			cout << "Located robot: " << robotString( *goodTable.at(pos)) << endl;
+		if (input[0] == 'P') {
+			if (input.size() != 10) continue;
+			Robot tmp = Robot( input.substr(1,9), "", "", "", "");
+			int pos = goodTable.find(tmp);
+			if (pos != -1) {
+				cout << "Located robot: " << robotString(*goodTable.at(pos)) << endl;
+			}
 		}
+		else if (input[0] == 'S') {
+			Robot tmp = Robot("", input.substr(1, input.size() - 1), "", "", "");
+			Robot* tmpPtr = nullptr;
+			Queue<Robot*> tmpQueue = Queue<Robot*>();
+			while (secondaryBST.getEntry(&tmp, tmpPtr)) {
+				secondaryBST.remove(tmpPtr);
+				tmpQueue.enqueue(&*tmpPtr);
+			}
+
+			while (!tmpQueue.isEmpty()) {
+				tmpQueue.dequeue(tmpPtr);
+				cout << "Located robot: " << robotString(*tmpPtr) << endl;
+				secondaryBST.insert(&*tmpPtr);
+			}
+
+
+		}
+
 
 	}
 }
