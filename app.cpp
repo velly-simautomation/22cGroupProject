@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
 
 }
 
-int mainMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable, BinarySearchTree<Robot*> &primaryTree, BinarySearchTree<Robot*> &secondaryTree, int coll[4]){
+int mainMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable, BinarySearchTree<Robot*> &primaryBST, BinarySearchTree<Robot*> &secondaryBST, int coll[4]){
 	string input = ""; // using string to avoid flushing stdin
 	
 	cout << "Robod Database Main Menu" << endl;
@@ -60,29 +60,20 @@ int mainMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable, BinarySear
 
 		input[0] = toupper(input[0]);
 
-		if (input[0] == 'A') { // add new data
-			addMenu(badTable, goodTable, primaryTree, secondaryTree, coll);
+		if (input[0] == 'A') { // add new data menu
+			addMenu(badTable, goodTable, primaryBST, secondaryBST, coll);
 		}
-		else if (input[0] == 'D') { // delete data
-
+		else if (input[0] == 'D') { // delete data menu
+			deleteMenu(badTable,goodTable,primaryBST,secondaryBST);
 		}
-		else if (input[0] == 'L') { // list data
-			primaryTree.inOrder(printRobot);
-			cout << endl;
-			secondaryTree.inOrder(printRobot);
-			cout << endl;
-			printHashTable(goodTable, printRobot, coll[0], coll[1]);
-			cout << endl;
-			printHashTable(badTable, printRobot, coll[2], coll[3]);
-			cout << endl << endl;
-			cout << robotString(*goodTable.at(0));
-			cout << endl;
+		else if (input[0] == 'L') { // list data menu
+			listMenu(badTable, goodTable, primaryBST, secondaryBST);
 		}
 		else if (input[0] == 'M') { // print menu
 			printMenu();
 		}
-		else if (input[0] == 'S') { // search data
-
+		else if (input[0] == 'S') { // search data menu
+			searchMenu(goodTable);
 		}
 
 		else if (input[0] == 'W') { // write data
@@ -113,7 +104,7 @@ int printMenu() {
 	cout << "\tS for search data menu." << endl;
 	cout << "\tW to write to defaultInput.txt" << endl;
 	cout << "\tX to display hashtable statistics." << endl;
-	cout << "\tQ to quit program." << endl;
+	cout << "\tQ to quit program, or exit sub menu." << endl;
 	return 0;
 }
 
@@ -179,7 +170,7 @@ void printRobot(Robot * &robot) {
 		robot->getProductionDate() << " : " << endl;
 }
 
-void printHashTable(const HashTable<Robot> &table, void print(Robot * & robot), const int &totCol, const int &maxCol) {
+void printHashTable(const HashTable<Robot> &table, void print(Robot * & robot)) {
 	Robot * tmp;
 	for (int i = 0; i < table.size(); ++i) {
 		if ((tmp = table.at(i)) != nullptr) {
@@ -187,7 +178,6 @@ void printHashTable(const HashTable<Robot> &table, void print(Robot * & robot), 
 		}
 		else cout << "empty" << endl;
 	}
-	cout << "Total collisions : " << totCol << "\t Max Collisions on insert : " << maxCol << endl;
 
 }
 
@@ -300,5 +290,102 @@ void addMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable,
 		}
 		endPrompt = false;
 		robot = "";
+	}
+}
+
+void searchMenu( HashTable<Robot> &goodTable) {
+	string input = "";
+
+	cout << "Robot Search Menu" << endl;
+
+	while ((input[0] != 'Q') || (input.size() != 1)) {
+		cout << "Search - Robot SNR (9 characters) : ";
+		getline(cin, input);
+
+		input = vutil::reduce(input, "");
+		input = vutil::stringToUpper(input);
+
+		if (input.size() != 9) continue;
+
+		Robot tmp = Robot(input,"","","","");
+		int pos = goodTable.find(tmp);
+		if (pos != -1) {
+			cout << "Located robot: " << robotString( *goodTable.at(pos)) << endl;
+		}
+
+	}
+}
+
+void deleteMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable, BinarySearchTree<Robot*> &prmaryBST, BinarySearchTree<Robot*> &secondaryBST) {
+	string input = "";
+	Robot * rPtr = nullptr;
+
+	cout << "Robot Search Menu" << endl;
+
+	while ((input[0] != 'Q') || (input.size() != 1)) {
+		cout << "Search - Robot SNR (9 characters) : ";
+		getline(cin, input);
+
+		input = vutil::reduce(input, "");
+		input = vutil::stringToUpper(input);
+
+		if (input.size() != 9) continue;
+
+		Robot tmp = Robot(input, "", "", "", "");
+		int pos = goodTable.find(tmp);
+		if (pos != -1) {
+			rPtr = goodTable.at(pos);
+			cout << "Located robot: " << robotString(*rPtr) << endl;
+			goodTable.remove(pos);
+			pos = badTable.find(tmp);
+			badTable.remove(pos);
+			prmaryBST.remove(rPtr);
+			secondaryBST.remove(rPtr);
+			cout << "Removed." << endl;
+		}
+	}
+}
+
+void listMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable, BinarySearchTree<Robot*> &primaryBST, BinarySearchTree<Robot*> &secondaryBST) {
+	string input = "M";
+
+	cout << "Robot List Menu" << endl;
+
+	while ((input[0] != 'Q') || (input.size() != 1)) {
+		cout << "List - Command (H for help) : ";
+		getline(cin, input);
+
+		input = vutil::reduce(input, "");
+		input[0] = toupper(input[0]);
+
+		if (input.size() != 1) continue;
+
+		if (input[0] == 'B') {
+			printHashTable(badTable, printRobot);
+			cout << endl << endl;
+		}
+		if (input[0] == 'G') {
+			printHashTable(goodTable, printRobot);
+			cout << endl;
+		}
+		if (input[0] == 'H') {
+			cout << "B for hashtable with bad hash function." << endl;
+			cout << "G for hashtable with good hash function." << endl;
+			cout << "H for this menu." << endl;
+			cout << "P for sorted by primary key." << endl;
+			cout << "S for sorted by secondary key." << endl;
+		}
+		if (input[0] == 'P') {
+			primaryBST.inOrder(printRobot);
+			cout << endl;
+		}
+		if (input[0] == 'S') {
+			secondaryBST.inOrder(printRobot);
+			cout << endl;
+		}
+
+
+
+
 	}
 }

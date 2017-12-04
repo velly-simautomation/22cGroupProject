@@ -52,12 +52,21 @@ void lineParser(string &line, Robot *&robot);
 void printRobot(Robot * &robot);
 
 /* Prints hash table inside class and statistics  for the table. */
-void printHashTable(const HashTable<Robot> &table, void print(Robot * & robot), const int &totCol, const int &maxCol);
+void printHashTable(const HashTable<Robot> &table, void print(Robot * & robot));
 
 /* returns string equivalent of robot which can be parsed by lineParser */
 string robotString(Robot &robot);
 
 /* crude menu for adding data in database */
 void addMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable, BinarySearchTree<Robot*> &primaryTree, BinarySearchTree<Robot*> &secondaryTree, int col[4]);
+
+/* search menu for robots */
+void searchMenu(HashTable<Robot> &goodTable);
+
+/* delete menu */
+void deleteMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable, BinarySearchTree<Robot*> &prmaryBST, BinarySearchTree<Robot*> &secondaryBST);
+
+/* list menu */
+void listMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable, BinarySearchTree<Robot*> &prmaryBST, BinarySearchTree<Robot*> &secondaryBST);
 
 #endif

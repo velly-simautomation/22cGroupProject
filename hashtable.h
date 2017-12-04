@@ -127,7 +127,7 @@ int32_t HashTable<T>::insert(T &item) {
 }
 
 _template
-int32_t HashTable<T>::hash(const T &item) {
+int32_t HashTable<T>::hash(const T &item){
 	if (_size < 1) return -1; // need a table of at least _size 1
 	if (_hashFunction != nullptr) {
 		return _hashFunction(item,_size);
@@ -136,7 +136,7 @@ int32_t HashTable<T>::hash(const T &item) {
 }
 
 _template
-int32_t HashTable<T>::find(const T &item) {
+int32_t HashTable<T>::find(const T &item){
 	int32_t x = hash(item), offs = 0;
 	if (x == -1) return -1; // table not allocated or function error
 
