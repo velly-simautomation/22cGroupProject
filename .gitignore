@@ -5,5 +5,8 @@ Debug/
 *.vcxproj
 *.filters
 *.opendb
-*.docx
 *.zip
+/Report3
+*.log
+*/22cGroupProject.tlog
+/Report4

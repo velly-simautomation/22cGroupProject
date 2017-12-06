@@ -56,6 +56,8 @@ int mainMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable, BinarySear
 		cout << "Option : ";
 		getline(cin, input);
 
+		input = vutil::trim(input);
+
 		if (input.size() != 1) continue; // we only care if we have 1 character as input
 
 		input[0] = toupper(input[0]);
@@ -224,44 +226,83 @@ void addMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable,
 	cout << "Robot insertion Menu" << endl;
 
 	while ((input[0] != 'Q') || (input.size() != 1)) {
-		cout << "Robot Serial Number (9 characters) : ";
+		cout << "Insert - Robot Serial Number (9 characters) : ";
 		getline(cin, input);
 
 		input = vutil::reduce(input,"");
 		input = vutil::stringToUpper(input);
 
-		if (input.size() != 9) continue;
+		if (input.size() != 9) {
+			cout << "Invalid input." << endl;
+			continue;
+		}
+
+		Robot rbt = Robot(input,"","","","");
+		Robot * rbtPtr = nullptr;
+		primaryTree.getEntry(&rbt, rbtPtr);
+
+		if (rbtPtr != nullptr) {
+			cout << "Robot with snr \'" << input << "\' already exists." << endl;
+			continue;
+		}
 
 		robot += input + ';'; // snr success
 
 		while ((input[0] != 'Q') || (input.size() != 1)) {
-			cout << robot << "\nModel? (1-20 characters, not 'Q') : ";
+			cout << robot << "\nInsert - Model? (1-20 characters, not 'Q') : ";
 			getline(cin, input);
 			input = vutil::reduce(input, " ");
-			if (input.size() < 1 || input.size() > 20) continue;
+
+			if (input.size() == 0 || input.size() > 20) {
+				cout << "Invalid input." << endl;
+				continue;
+			}
+
+			input[0] = toupper(input[0]);
 			robot += input + ';'; // model success
+			
 			while ((input[0] != 'Q') || (input.size() != 1)) {
-				cout << robot << "\nAlias? (0-20 characters, not 'Q') : ";
+				cout << robot << "\nInsert - Alias? (0-20 characters, not 'Q') : ";
 				getline(cin, input);
 				input = vutil::reduce(input, " ");
-				if (input.size() > 0) input[0] = toupper(input[0]);
-				if (input.size() > 20) continue;
+
+				if (input.size() > 20) {
+					cout << "Invalid input." << endl;
+					continue;
+				}
+
+				if (input.size() > 0 )input[0] = toupper(input[0]);
 				robot += input + ';'; // alias success
+				
 				while ((input[0] != 'Q') || (input.size() != 1)) {
-					cout << robot << "\nComment? (0-100 characters, not 'Q') : ";
+					cout << robot << "\nInsert - Comment? (0-100 characters, not 'Q') : ";
 					getline(cin, input);
 					input = vutil::reduce(input, " ");
+
+					if (input.size() > 100) {
+						cout << "Invalid input." << endl;
+						continue;
+					}
+					
 					if (input.size() > 0) input[0] = toupper(input[0]);
-					if (input.size() > 100) continue;
+
 					robot += input + ';'; // comment success
+					
 					while ((input[0] != 'Q') || (input.size() != 1)) {
-						cout << robot << "\nDate? (0-12 characters, not 'Q') : ";
+						cout << robot << "\nInsert - Date? (0-12 characters, not 'Q') : ";
 						getline(cin, input);
 						input = vutil::reduce(input, " ");
-						if (input.size() > 12) continue;
+						
+						if (input.size() > 12) {
+							cout << "Invalid input." << endl;
+							continue;
+						}
+						
+						if (input.size() > 0) input[0] = toupper(input[0]);
 						robot += input + ';'; // date success
-						while (input[0] != 'Y' && input[0] != 'N') {
-							cout << robot << endl << "Insert into database? (Y or N) : ";
+						
+						while (input[0] != 'Q' && input[0] != 'Y' && input[0] != 'N') {
+							cout << robot << endl << "Insert - Insert into database? (Y or N) : ";
 							getline(cin, input);
 							input = vutil::trim(input);
 							if (input.size() != 1) continue;
@@ -306,6 +347,7 @@ void searchMenu( HashTable<Robot> &goodTable, BinarySearchTree<Robot*> &secondar
 
 		if (input[0] == 'P') {
 			if (input.size() != 10) continue;
+			input = vutil::stringToUpper(input);
 			Robot tmp = Robot( input.substr(1,9), "", "", "", "");
 			int pos = goodTable.find(tmp);
 			if (pos != -1) {
@@ -334,9 +376,8 @@ void searchMenu( HashTable<Robot> &goodTable, BinarySearchTree<Robot*> &secondar
 	}
 }
 
-void deleteMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable, BinarySearchTree<Robot*> &prmaryBST, BinarySearchTree<Robot*> &secondaryBST) {
+void deleteMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable, BinarySearchTree<Robot*> &primaryBST, BinarySearchTree<Robot*> &secondaryBST) {
 	string input = "";
-	Robot * rPtr = nullptr;
 
 	cout << "Robot Deletion Menu" << endl;
 
@@ -350,14 +391,17 @@ void deleteMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable, BinaryS
 		if (input.size() != 9) continue;
 
 		Robot tmp = Robot(input, "", "", "", "");
-		int pos = goodTable.find(tmp);
-		if (pos != -1) {
-			rPtr = goodTable.at(pos);
+		Robot * rPtr = nullptr;
+		int pos2 = goodTable.find(tmp);
+
+		if (pos2 > 0) {
+			rPtr = goodTable.remove(pos2);
 			cout << "Removing robot: " << robotString(*rPtr) << endl;
-			goodTable.remove(pos);
-			pos = badTable.find(tmp);
-			badTable.remove(pos);
-			prmaryBST.remove(rPtr);
+
+			pos2 = badTable.find(tmp);
+			badTable.remove(pos2);
+
+			primaryBST.remove(rPtr);
 			
 			Robot* rPtr2;
 			Queue<Robot*> queue = Queue<Robot*>();
@@ -369,8 +413,7 @@ void deleteMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable, BinaryS
 				if (rPtr2 == rPtr) continue;
 				secondaryBST.insert(rPtr2);
 			}
-
-//			secondaryBST.remove(rPtr); // to do : fix duplicates
+			delete rPtr;
 			cout << "Removed." << endl;
 		}
 	}
