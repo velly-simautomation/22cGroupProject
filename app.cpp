@@ -221,6 +221,7 @@ void addMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable,
 	BinarySearchTree<Robot*> &primaryTree, BinarySearchTree<Robot*> &secondaryTree, int col[4]) {
 	string input = "",
 		robot="";
+    string badChars = "!@#$%^&*()<>?/;:L\\{}[]_+-= \t\n";
 	bool inserted = false, endPrompt = false;
 
 	cout << "Robot insertion Menu" << endl;
@@ -229,7 +230,7 @@ void addMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable,
 		cout << "Insert - Robot Serial Number (9 characters) : ";
 		getline(cin, input);
 
-		input = vutil::reduce(input,"");
+        input = vutil::reduce(input,"",badChars);
 		input = vutil::stringToUpper(input);
 
 		if (input.size() != 9) {
