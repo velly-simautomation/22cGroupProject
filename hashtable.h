@@ -49,6 +49,7 @@ public:
 	}
 
 	~HashTable() {
+		// does not free non null/sentinel pointers
 		if (table != nullptr)
 			delete[] table;
 	}

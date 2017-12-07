@@ -30,10 +30,11 @@ using namespace std;
 int main(int argc, char *argv[]) {
 	Queue<string> readLines;
 	int nlines = readFile("defaultInput.txt", readLines);
+	nlines = nlines < 11 ? 11 : getNextPrime(nlines*2);
 	int coll[4] = { 0, 0, 0, 0 }; //good total collisons, good max collisions, bad tot, bad max
 
-	HashTable<Robot> badTable = HashTable<Robot>(getNextPrime(nlines*2), robot_hash_bad); // change nlines with next prime number
-	HashTable<Robot> goodTable = HashTable<Robot>(getNextPrime(nlines*2), robot_hash_good); // same
+	HashTable<Robot> badTable = HashTable<Robot>(nlines, robot_hash_bad); // nlines is next prime, 11 is minimum
+	HashTable<Robot> goodTable = HashTable<Robot>(nlines, robot_hash_good); // same
 	BinarySearchTree<Robot*> primaryBST = BinarySearchTree<Robot*>(comparePrimaryKey),
 		secondaryBST = BinarySearchTree<Robot*>(compareSecondaryKey);
 
@@ -97,7 +98,6 @@ int mainMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable, BinarySear
 }
 
 
-// TO DO : Update print menu with actual available options.
 int printMenu() {
 	cout << "\tA for add new data menu." << endl;
 	cout << "\tD for delete data menu." << endl;
@@ -221,7 +221,7 @@ void addMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable,
 	BinarySearchTree<Robot*> &primaryTree, BinarySearchTree<Robot*> &secondaryTree, int col[4]) {
 	string input = "",
 		robot="";
-    string badChars = "!@#$%^&*()<>?/;:L\\{}[]_+-= \t\n";
+    string badChars = "^*()<>/;L{}[]_+=\t\n";
 	bool inserted = false, endPrompt = false;
 
 	cout << "Robot insertion Menu" << endl;
@@ -230,7 +230,7 @@ void addMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable,
 		cout << "Insert - Robot Serial Number (9 characters) : ";
 		getline(cin, input);
 
-        input = vutil::reduce(input,"",badChars);
+		input = vutil::reduce(input,"",badChars + "\\- .,!?%&$#@:");
 		input = vutil::stringToUpper(input);
 
 		if (input.size() != 9) {
@@ -252,7 +252,7 @@ void addMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable,
 		while ((input[0] != 'Q') || (input.size() != 1)) {
 			cout << robot << "\nInsert - Model? (1-20 characters, not 'Q') : ";
 			getline(cin, input);
-			input = vutil::reduce(input, " ");
+			input = vutil::reduce(input, " ", badChars);
 
 			if (input.size() == 0 || input.size() > 20) {
 				cout << "Invalid input." << endl;
@@ -265,7 +265,7 @@ void addMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable,
 			while ((input[0] != 'Q') || (input.size() != 1)) {
 				cout << robot << "\nInsert - Alias? (0-20 characters, not 'Q') : ";
 				getline(cin, input);
-				input = vutil::reduce(input, " ");
+				input = vutil::reduce(input, " ", badChars);
 
 				if (input.size() > 20) {
 					cout << "Invalid input." << endl;
@@ -278,7 +278,7 @@ void addMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable,
 				while ((input[0] != 'Q') || (input.size() != 1)) {
 					cout << robot << "\nInsert - Comment? (0-100 characters, not 'Q') : ";
 					getline(cin, input);
-					input = vutil::reduce(input, " ");
+					input = vutil::reduce(input, " ", badChars);
 
 					if (input.size() > 100) {
 						cout << "Invalid input." << endl;
@@ -292,7 +292,7 @@ void addMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable,
 					while ((input[0] != 'Q') || (input.size() != 1)) {
 						cout << robot << "\nInsert - Date? (0-12 characters, not 'Q') : ";
 						getline(cin, input);
-						input = vutil::reduce(input, " ");
+						input = vutil::reduce(input, " ", badChars);
 						
 						if (input.size() > 12) {
 							cout << "Invalid input." << endl;
