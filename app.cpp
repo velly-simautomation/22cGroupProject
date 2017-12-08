@@ -44,6 +44,12 @@ int main(int argc, char *argv[]) {
 
 	writeFile("defaultOutput.txt", goodTable);
 
+	// clean up
+	for (int i = 0; i < goodTable.size(); ++i) {
+		Robot * tmp = goodTable.at(i);
+		if (tmp != nullptr) delete tmp;
+	}
+
 }
 
 int mainMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable, BinarySearchTree<Robot*> &primaryBST, BinarySearchTree<Robot*> &secondaryBST, int coll[4]){
@@ -94,6 +100,7 @@ int mainMenu(HashTable<Robot> &badTable, HashTable<Robot> &goodTable, BinarySear
 		}
 
 	}
+
 	return 0;
 }
 
